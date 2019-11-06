@@ -5,12 +5,10 @@ import urllib.request
 
 def requestStonks(url):
     req = urllib.request.Request(url)
-    return urllib.request.urlopen(req)
+    return urllib.request.urlopen(req).read()
 
 def readAndPlotJSON(file):
-    f = open(file, 'r')
-    data = json.load(f)
-    f.close()
+    data = json.loads(file.decode('utf-8'))
 
     tempo = []
     opens = []
@@ -46,13 +44,11 @@ def showGraph():
     plt.show()
 
 # Main
-# TODO: PEGAR URLS PARA FAZER REQUEST
-# URL1 = 'https://alphavantage.com/dasygfsauydfa'
 stonks = []
-stonks.append(requestStonks(URL1))
-stonks.append(requestStonks(URL2))
-stonks.append(requestStonks(URL3))
-stonks.append(requestStonks(URL4))
+stonks.append(requestStonks('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=seila'))
+stonks.append(requestStonks('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=seila'))
+stonks.append(requestStonks('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GOGL&apikey=seila'))
+stonks.append(requestStonks('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=VALE&apikey=seila'))
 
 plt.subplot(2, 2, 1)
 readAndPlotJSON(stonks[0])
