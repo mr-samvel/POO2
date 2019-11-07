@@ -4,6 +4,7 @@ import datetime
 import urllib.request
 
 def requestStonks(url):
+    print('Fazendo o request da acao no url: ' + url)
     req = urllib.request.Request(url)
     return urllib.request.urlopen(req).read()
 
@@ -16,7 +17,7 @@ def readAndPlotJSON(file):
     closes = []
     name = data['Meta Data']['2. Symbol']
     timeSeries = data['Time Series (Daily)']
-
+    print('Montando o grafico da acao ' + name)
     for key, value in timeSeries.items():
         tempo.append(datetime.datetime.strptime(key, '%Y-%m-%d'))
         opens.append(float(value['1. open']))
@@ -44,6 +45,7 @@ def showGraph():
     plt.show()
 
 # Main
+print('Iniciando programa')
 stonks = []
 stonks.append(requestStonks('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=seila'))
 stonks.append(requestStonks('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=seila'))
