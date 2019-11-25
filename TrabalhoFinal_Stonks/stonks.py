@@ -6,4 +6,6 @@ def stonks(mediam, opens, closes, datas, num):
                 tupl.append(tuple ([datas[num][i], mediam[num][i], 1]))
             else:
                 tupl.append(tuple ([datas[num][i], mediam[num][i], 0]))
+        else:
+            tupl.append(tuple ([datas[num][i], mediam[num][i], 2]))
     return tupl
