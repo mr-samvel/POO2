@@ -101,9 +101,9 @@ class StonksPlotter:
         candle = []
         for k in range(len(tempos)):
             candle.append((tempos[k], opens[k], highs[k], lows[k], closes[k]))
-        mpl_finance.candlestick_ohlc(ax, candle, width=1, colorup='g', colordown='r', alpha=1.0)
+        mpl_finance.candlestick_ohlc(ax, candle, width=0.2, colorup='g', colordown='r', alpha=1.0)
 
-        ax.plot(tempos, mediaMovel)
+        ax.plot(tempos, mediaMovel, 'r--', alpha=0.75)
         ax.set(xlabel='Timestamp', ylabel='Preço', title=nome)
 
         plt.show()
