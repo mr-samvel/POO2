@@ -1,10 +1,12 @@
 import json
 import urllib.request
+import datetime
+import matplotlib.pyplot as plt
+import mpl_finance
 
 class StonksPlotter:
     def __init__(self, stonks):
         self.__stonks = stonks
-        self.__requestStonks(stonks)
 
     ### Para armazenamento e leitura de dados.
     def addStonkToFile(self, name, url):
@@ -38,13 +40,70 @@ class StonksPlotter:
         url = self.__stonks[stonkName]
         f = self.__requestStonks(url)
         
-        data = json.load(f.decode('utf-8'))
-        
-        # e daqui vai, essa função deve plottar o grafico
+        data = json.loads(f.decode('utf-8'))
 
-        return self.analisarAsCurvas()
+        tempos = []
+        opens = []
+        highs = []
+        lows = []
+        closes = []
+        volumes = []
+
+        # meu deus do ceu eu odeio python
+        listItems = list(data.items())
+        name = list(listItems[0][1].values())[1]
+        timeSeries = listItems[1][1] # tupla ( 'time series', obj{} )
+
+        for key, value in timeSeries.items():
+            # key: YYYY-MM-DD
+            # value: {key: value}
+            value = list(value.items())
+            tempos.append(datetime.datetime.strptime(key, '%Y-%m-%d'))
+            opens.append(int(float(value[0][1])))
+            highs.append(int(float(value[1][1])))
+            lows.append(int(float(value[2][1])))
+            closes.append(int(float(value[3][1])))
+            volumes.append(int(float(value[4][1])))
+        
+        self.__plotGraph(name, tempos, opens, highs, lows, closes, volumes)
+        # return self.__analisarAsCurvas()
+
+
+    def __reverseArrays(self, *args):
+        for arg in args:
+            arg.reverse()
+        return args
+
+    # Essa função calcula e retorna um vetor com a media movel
+    def __calcMediaMovel(self, highs, lows):
+        media = []
+        for i in range(len(highs)-10):
+            m = 0
+            for j in range(0, 5):
+                m += ( highs[i+j] + lows[i+j] ) / 2
+            media.append(m/5)
+        return media
     
-    def analisarAsCurvas(self):
-        # e daqui vai pt. 2
+    def __filterArrays(self, *args):
+        for arg in args:
+            del(arg[0 : (len(arg)-200) ])
+        return args
+
+    def __plotGraph(self, nome, tempos, opens, highs, lows, closes, volumes):
+        tempos, opens, highs, lows, closes, volumes = self.__reverseArrays(tempos, opens, highs, lows, closes, volumes)
+        mediaMovel = self.__calcMediaMovel(highs, lows)
+        tempos, opens, highs, lows, closes, volumes, mediaMovel = self.__filterArrays(tempos, opens, highs, lows, closes, volumes, mediaMovel)
+
+        print(len(tempos), len(mediaMovel), len(opens))
+        
+        fig, ax = plt.subplots()
+        ax.plot(tempos, mediaMovel)
+        ax.set(xlabel='Data', ylabel='Preço', title=nome)
+        mpl_finance.candlestick2_ohlc(ax, opens, highs, lows, closes)
+
+        plt.show()
+
+    def __analisarAsCurvas(self):
+        # TODO
         # esse pass aqui \/ é pra substituir dps com o return 0, 1 ou 2 (que representa a ação que o usuário tem que tomar - comprar, vender etc)
         pass
