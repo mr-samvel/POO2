@@ -1,0 +1,6 @@
+{
+    "MSFT": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=sOmErAnDoMkEy",
+    "AAPL": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=sOmErAnDoMkEy",
+    "GOGL": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GOGL&apikey=sOmErAnDoMkEy",
+    "VALE": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=VALE&apikey=sOmErAnDoMkEy"
+}
