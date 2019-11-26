@@ -65,6 +65,7 @@ class StonksPlotter:
             lows.append(int(float(value[4][1])))
             closes.append(int(float(value[6][1])))
             volumes.append(int(float(value[8][1])))
+        #Transforma a data em um número
         tempos = [mdates.date2num(date(int(data[0:4]), int(data[5:7]), int(data[8:10]))) for data in tempos]
 
         self.__plotGraph(name, tempos, opens, highs, lows, closes, volumes)
@@ -76,7 +77,7 @@ class StonksPlotter:
             arg.reverse()
         return args
 
-    # Essa função calcula e retorna um vetor com a media movel
+    # Essa função calcula e retorna um vetor com a media movel com peso 9
     def __calcMediaMovel(self, highs, lows):
         media = []
         for i in range(len(highs)-10):
@@ -86,6 +87,7 @@ class StonksPlotter:
             media.append(m/9)
         return media
 
+    # Retorna a média móvel com peso 40
     def __calcMediaMovelQ(self, highs, lows):
         media = []
         for i in range(len(highs)-41):
@@ -95,6 +97,8 @@ class StonksPlotter:
             media.append(m/40)
         return media
 
+    # Para tornar os gráficos mais legíveis, delimita-se a quantidade de informações
+    # contidas no mesmo. Nesse caso, os vetores permanecem com apenas 150 dados
     def __filterArrays(self, *args):
         for arg in args:
             del(arg[0 : (len(arg)-150) ])
@@ -106,23 +110,33 @@ class StonksPlotter:
         mediaMovelQ = self.__calcMediaMovelQ(highs, lows)
         tempos, opens, highs, lows, closes, volumes, mediaMovel, mediaMovelQ = self.__filterArrays(tempos, opens, highs, lows, closes, volumes, mediaMovel, mediaMovelQ)
 
+        # Por mais que a 'fig' não seja usada, se faz necessário declarar ela aqui, por conta
+        # da documentação do matplotlib, onde quando se declara um subplot, é necessário a
+        # declaração de uma figura previamente
         fig, ax = plt.subplots()
 
         candle = []
         for k in range(len(tempos)):
             candle.append((tempos[k], opens[k], highs[k], lows[k], closes[k]))
+        # Plotagem do candlestick
         mpl_finance.candlestick_ohlc(ax, candle, width=0.2, colorup='g', colordown='r', alpha=1.0)
 
+        # Plotagem de ambas as médias móveis
         ax.plot(tempos, mediaMovel, 'b--', alpha=0.75, label='Média Móvel - 9')
         ax.plot(tempos, mediaMovelQ, 'y--', alpha=1, label='Média Móvel - 40')
+        # Deficição das labels de eixo
         ax.set(xlabel='Timestamp', ylabel='Preço', title=nome)
         ax.xaxis_date()
+        # Como no gráfico são dispostos muitos dias, ele acabava ficando poluido e embaraçado
+        # com tantas datas, por isso foi usada a função abaixo, que gira as labels do eixo x
         for l in ax.get_xticklabels():
             l.set_rotation(20)
 
         plt.legend()
         plt.show()
 
+    # Método que retornar qual operação deve ser realizada com base em uma analise de dados
+    # de Médias Móveis 9:40
     def __analisarAsCurvas(self, media, mediaq):
         if media[len(media)] > mediaq[len(media)]:
             return 0 #Vender
