@@ -5,13 +5,12 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.widgets as mwidg
 import mpl_finance
-from view import View
+from classes.view import View
 
 class StonksPlotter:
     def __init__(self, stonks):
         self.__stonks = stonks
 
-  
     ### Para armazenamento e leitura de dados.
     # Essa função escreve no arquivo com os nomes e urls
     def addStonkToFile(self, name, url):
