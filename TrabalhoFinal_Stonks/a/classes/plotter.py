@@ -1,6 +1,7 @@
 import json
 import urllib.request
-import datetime
+from datetime import date
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import mpl_finance
 
@@ -58,12 +59,13 @@ class StonksPlotter:
             # key: YYYY-MM-DD
             # value: {key: value}
             value = list(value.items())
-            tempos.append(datetime.datetime.strptime(key, '%Y-%m-%d'))
+            tempos.append(key)
             opens.append(int(float(value[0][1])))
             highs.append(int(float(value[1][1])))
             lows.append(int(float(value[2][1])))
             closes.append(int(float(value[3][1])))
             volumes.append(int(float(value[4][1])))
+        tempos = [mdates.date2num(date(int(data[0:4]), int(data[5:7]), int(data[8:10]))) for data in tempos]
         
         self.__plotGraph(name, tempos, opens, highs, lows, closes, volumes)
         # return self.__analisarAsCurvas()
@@ -86,20 +88,23 @@ class StonksPlotter:
     
     def __filterArrays(self, *args):
         for arg in args:
-            del(arg[0 : (len(arg)-200) ])
+            del(arg[0 : (len(arg)-80) ])
         return args
 
     def __plotGraph(self, nome, tempos, opens, highs, lows, closes, volumes):
         tempos, opens, highs, lows, closes, volumes = self.__reverseArrays(tempos, opens, highs, lows, closes, volumes)
         mediaMovel = self.__calcMediaMovel(highs, lows)
         tempos, opens, highs, lows, closes, volumes, mediaMovel = self.__filterArrays(tempos, opens, highs, lows, closes, volumes, mediaMovel)
-
-        print(len(tempos), len(mediaMovel), len(opens))
         
         fig, ax = plt.subplots()
+
+        candle = []
+        for k in range(len(tempos)):
+            candle.append((tempos[k], opens[k], highs[k], lows[k], closes[k]))
+        mpl_finance.candlestick_ohlc(ax, candle, width=1, colorup='g', colordown='r', alpha=1.0)
+
         ax.plot(tempos, mediaMovel)
-        ax.set(xlabel='Data', ylabel='Preço', title=nome)
-        mpl_finance.candlestick2_ohlc(ax, opens, highs, lows, closes)
+        ax.set(xlabel='Timestamp', ylabel='Preço', title=nome)
 
         plt.show()
 
