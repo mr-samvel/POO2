@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 class View:
     def __init__(self, stonksPlotter, stonksNames):
@@ -30,6 +31,16 @@ class View:
         input.pack(ipady=3, pady=padding, side=TOP)
         return input
     
+    # Método estático específico para ser chamado do plotter
+    @staticmethod
+    def callMessageBoxToAction(action, stonk, event):
+        if action == 0:
+            messagebox.showinfo('Venda', 'Este é um bom momento para vender seu(s) título(s) do/a ' + stonk)
+        elif action == 1:
+            messagebox.showinfo('Compre', 'Este é um bom momento para comprar título(s) do/a ' + stonk)
+        elif action == 2:
+            messagebox.showinfo('Espere', 'Este não é um momento propício para comprar ou vender títulos do/a ' + stonk)
+    
     # Criar esse wrapper aqui foi chato, porque quando chamava essa funcao passando o callback com algum argumento,
     # o callback era chamado já na criacao do botao. Até que eu descobri essa maravilha desse *
     def __createButton(self, frame, txt, padding, paddingSide, handler, *args):
@@ -51,7 +62,7 @@ class View:
             else:
                 self.__buttons.append(self.__createButton(mainFrame, stonk, 5, TOP, self.__callPlotter, stonk))
         if len(self.__stonksNames) < 7:
-            add = self.__createButton(mainFrame, 'Adicionar Outra Ação', (0, 15), BOTTOM, self.addAnotherStonkForm)
+            self.__createButton(mainFrame, 'Adicionar Outra Ação', (0, 15), BOTTOM, self.addAnotherStonkForm)
         mainFrame.tkraise()
 
     ### Formulario p/ adicionar outra acao
@@ -64,13 +75,11 @@ class View:
         urlInput = self.__createInput(formFrame, 'ex.: https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=XMR&market=CNY&apikey=QO7KBACPTDT2LZ4F', 3)
         submitBtn = self.__createButton(formFrame, 'Ok', 30, BOTTOM, self.__addAnotherStonk, form, nomeInput, urlInput)
         formFrame.tkraise()
-    
+
     ### Handler dos botões
     def __callPlotter(self, stonk):
-        # TODO: Essa função chama a plotagem da stonk
-        action = self.__stonksPlotter.plotStonk(stonk)
-        # TODO: action é 0, 1 ou 2 mostrar alerta pra cada caso.
-
+        self.__stonksPlotter.plotStonk(stonk)
+        
     def __addAnotherStonk(self, form, nomeInput, urlInput):
         nome = nomeInput.get()
         url = urlInput.get()
@@ -80,7 +89,8 @@ class View:
         self.__mainFrame.destroy()
         self.mainFrame()
         form.destroy()
-    
+        
+    ### Loop principal
     def run(self):
         self.__root.mainloop()
         
