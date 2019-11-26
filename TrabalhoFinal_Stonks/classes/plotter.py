@@ -112,7 +112,11 @@ class StonksPlotter:
         plt.legend()
         plt.show()
 
-    def __analisarAsCurvas(self):
-        # TODO
-        # esse pass aqui \/ é pra substituir dps com o return 0, 1 ou 2 (que representa a ação que o usuário tem que tomar - comprar, vender etc)
-        pass
+    def __analisarAsCurvas(self, opens, media, close):
+        for i in range(len(close)-1, len(close)-7, -1):
+            if media[i] <= opens[i] and media[i] >= close[i]:
+                if media[i-1] > media[i+1]:
+                    return 0 # vender
+                elif media[i-1] < media[i+1]:
+                    return 1 # comprar
+        return 2
