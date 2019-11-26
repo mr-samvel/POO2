@@ -1,6 +1,6 @@
 {
-    "MSFT": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=sOmErAnDoMkEy",
-    "AAPL": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=sOmErAnDoMkEy",
-    "GOGL": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GOGL&apikey=sOmErAnDoMkEy",
-    "VALE": "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=VALE&apikey=sOmErAnDoMkEy"
+    "BTC": "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=CNY&apikey=demo",
+    "ETH": "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=ETH&market=CNY&apikey=QO7KBACPTDT2LZ4F",
+    "XRP": "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=XRP&market=CNY&apikey=QO7KBACPTDT2LZ4F",
+    "EOS": "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=EOS&market=CNY&apikey=QO7KBACPTDT2LZ4F"
 }

@@ -61,10 +61,10 @@ class StonksPlotter:
             value = list(value.items())
             tempos.append(key)
             opens.append(int(float(value[0][1])))
-            highs.append(int(float(value[1][1])))
-            lows.append(int(float(value[2][1])))
-            closes.append(int(float(value[3][1])))
-            volumes.append(int(float(value[4][1])))
+            highs.append(int(float(value[2][1])))
+            lows.append(int(float(value[4][1])))
+            closes.append(int(float(value[6][1])))
+            volumes.append(int(float(value[8][1])))
         tempos = [mdates.date2num(date(int(data[0:4]), int(data[5:7]), int(data[8:10]))) for data in tempos]
 
         self.__plotGraph(name, tempos, opens, highs, lows, closes, volumes)
@@ -81,20 +81,30 @@ class StonksPlotter:
         media = []
         for i in range(len(highs)-10):
             m = 0
-            for j in range(0, 5):
+            for j in range(0, 9):
                 m += ( highs[i+j] + lows[i+j] ) / 2
-            media.append(m/5)
+            media.append(m/9)
+        return media
+
+    def __calcMediaMovelQ(self, highs, lows):
+        media = []
+        for i in range(len(highs)-41):
+            m = 0
+            for j in range(0, 40):
+                m += ( highs[i+j] + lows[i+j] ) / 2
+            media.append(m/40)
         return media
 
     def __filterArrays(self, *args):
         for arg in args:
-            del(arg[0 : (len(arg)-80) ])
+            del(arg[0 : (len(arg)-150) ])
         return args
 
     def __plotGraph(self, nome, tempos, opens, highs, lows, closes, volumes):
         tempos, opens, highs, lows, closes, volumes = self.__reverseArrays(tempos, opens, highs, lows, closes, volumes)
         mediaMovel = self.__calcMediaMovel(highs, lows)
-        tempos, opens, highs, lows, closes, volumes, mediaMovel = self.__filterArrays(tempos, opens, highs, lows, closes, volumes, mediaMovel)
+        mediaMovelQ = self.__calcMediaMovelQ(highs, lows)
+        tempos, opens, highs, lows, closes, volumes, mediaMovel, mediaMovelQ = self.__filterArrays(tempos, opens, highs, lows, closes, volumes, mediaMovel, mediaMovelQ)
 
         fig, ax = plt.subplots()
 
@@ -103,7 +113,8 @@ class StonksPlotter:
             candle.append((tempos[k], opens[k], highs[k], lows[k], closes[k]))
         mpl_finance.candlestick_ohlc(ax, candle, width=0.2, colorup='g', colordown='r', alpha=1.0)
 
-        ax.plot(tempos, mediaMovel, 'r--', alpha=0.75, label='Média Móvel')
+        ax.plot(tempos, mediaMovel, 'b--', alpha=0.75, label='Média Móvel - 9')
+        ax.plot(tempos, mediaMovelQ, 'y--', alpha=1, label='Média Móvel - 40')
         ax.set(xlabel='Timestamp', ylabel='Preço', title=nome)
         ax.xaxis_date()
         for l in ax.get_xticklabels():
@@ -112,11 +123,10 @@ class StonksPlotter:
         plt.legend()
         plt.show()
 
-    def __analisarAsCurvas(self, opens, media, close):
-        for i in range(len(close)-1, len(close)-7, -1):
-            if media[i] <= opens[i] and media[i] >= close[i]:
-                if media[i-1] > media[i+1]:
-                    return 0 # vender
-                elif media[i-1] < media[i+1]:
-                    return 1 # comprar
-        return 2
+    def __analisarAsCurvas(self, media, mediaq):
+        if media[len(media)] > mediaq[len(media)]:
+            return 0 #Vender
+        elif media[len(media)] < mediaq[len(media)]:
+            return 1 #Comprar
+        else:
+            return 2 #Esperar

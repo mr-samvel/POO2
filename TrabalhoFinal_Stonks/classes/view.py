@@ -59,9 +59,9 @@ class View:
         form = Toplevel(self.__root)
         formFrame = self.__createFrame(form)
         nomeLabel = self.__createLabel(formFrame, 'Código da ação:', 10)
-        nomeInput = self.__createInput(formFrame, 'ex.: VALE', 3)
+        nomeInput = self.__createInput(formFrame, 'ex.: XMR', 3)
         urlLabel = self.__createLabel(formFrame, 'URL p/ request:', 10)
-        urlInput = self.__createInput(formFrame, 'ex.: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=VALE&apikey=sOmErAnDoMkEy', 3)
+        urlInput = self.__createInput(formFrame, 'ex.: https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=XMR&market=CNY&apikey=QO7KBACPTDT2LZ4F', 3)
         submitBtn = self.__createButton(formFrame, 'Ok', 30, BOTTOM, self.__addAnotherStonk, form, nomeInput, urlInput)
         formFrame.tkraise()
     
