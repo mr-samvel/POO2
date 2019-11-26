@@ -77,24 +77,14 @@ class StonksPlotter:
             arg.reverse()
         return args
 
-    # Essa função calcula e retorna um vetor com a media movel com peso 9
-    def __calcMediaMovel(self, highs, lows):
+    # Essa função calcula e retorna um vetor com a media movel com peso "peso"
+    def __calcMediaMovel(self, highs, lows, peso):
         media = []
-        for i in range(len(highs)-10):
+        for i in range(len(highs)-peso+1):
             m = 0
-            for j in range(0, 9):
+            for j in range(0, peso):
                 m += ( highs[i+j] + lows[i+j] ) / 2
-            media.append(m/9)
-        return media
-
-    # Retorna a média móvel com peso 40
-    def __calcMediaMovelQ(self, highs, lows):
-        media = []
-        for i in range(len(highs)-41):
-            m = 0
-            for j in range(0, 40):
-                m += ( highs[i+j] + lows[i+j] ) / 2
-            media.append(m/40)
+            media.append(m/peso)
         return media
 
     # Para tornar os gráficos mais legíveis, delimita-se a quantidade de informações
@@ -106,8 +96,8 @@ class StonksPlotter:
 
     def __plotGraph(self, nome, tempos, opens, highs, lows, closes, volumes):
         tempos, opens, highs, lows, closes, volumes = self.__reverseArrays(tempos, opens, highs, lows, closes, volumes)
-        mediaMovel = self.__calcMediaMovel(highs, lows)
-        mediaMovelQ = self.__calcMediaMovelQ(highs, lows)
+        mediaMovel = self.__calcMediaMovel(highs, lows, 9)
+        mediaMovelQ = self.__calcMediaMovel(highs, lows, 40)
         tempos, opens, highs, lows, closes, volumes, mediaMovel, mediaMovelQ = self.__filterArrays(tempos, opens, highs, lows, closes, volumes, mediaMovel, mediaMovelQ)
 
         # Por mais que a 'fig' não seja usada, se faz necessário declarar ela aqui, por conta
