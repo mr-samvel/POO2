@@ -1,0 +1,20 @@
+Olá,
+
+Esse programa tem por objetivo mostrar gráficos referentes a variações das moedas cadastradas pelo tempo.
+Os gráficos tem como métricas um candlestick composto por Open, High, Low e Close, e duas médias móveis, uma com 9 dias de período e a outra com 40.
+
+Para executar o programa, é necessário ter instalado biblioteca mpl_finance (além das nativas do Python 3.6+). Para instalar execute o seguinte comando no terminal:
+	>> pip install mpl_finance --user
+
+Para executar o programa, basta executar o arquivo main.py com o Python 3.
+
+Por padrão, os botões BTC, ETH, XRP e EOS, quando clickados, fazem a aquisição por HTTP Request das suas respectivas moedas e mostram o gráfico.
+No gráfico, há um botão de Recomendação, quando clickado, faz-se uma análise das médias móveis, retornando uma mensagem que informa se o momento é propício para comprar ou vender títulos referentes àquela moeda.
+
+Para adicionar uma moeda além das já predispostas, basta clicar no botão Adicionar Outra Ação e preencher o formulário com o nome da moeda e o url da Alphavantage para fazer o request. Clickando no botão Ok desse formulário, as informações são gravadas e um novo botão referente a moeda recém adicionada deve aparecer na interface.
+
+Qualquer dúvida estamos à disposição.
+
+Equipe:
+	Samuel Cardoso
+	Samuel Moreira Ransolin
